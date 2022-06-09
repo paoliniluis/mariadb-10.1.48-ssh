@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  mariadb-data-choke:
+    build: .
+    container_name: mariadb-data-choke
+    hostname: mariadb-data-choke
+    ports:
+      - 3306:3306
+    networks: 
+      - metanet-private-choke
+  openssh-server-choke:
+    image: lscr.io/linuxserver/openssh-server:version-8.8_p1-r1
+    container_name: ssh-choke
+    hostname: ssh-choke
+    environment:
+      - PASSWORD_ACCESS=true
+      - USER_PASSWORD=mysecretpassword
+      - USER_NAME=metabase
+    volumes:
+      - $PWD/ssh/sshd_config:/config/ssh_host_keys/sshd_config
+    networks: 
+      - metanet-private-choke
+networks: 
+  metanet-private-choke:
+    driver: bridge
